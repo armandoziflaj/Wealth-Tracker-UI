@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Home } from "./pages/Home.tsx";
+import Login from "./pages/Login/Login.tsx";
+import { Register } from "./pages/Register/Register.tsx";
+import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
+import Navbar from "./components/NavBar.tsx";
+import Footer from "./components/Footer.tsx";
+import DashBoard from "./pages/DashBoard/DashBoard.tsx";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    return (
+        <Router>
+            <div className="min-h-screen flex flex-col bg-zen-deep text-white selection:bg-zen-neon selection:text-black">
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+                <Navbar />
 
-export default App
+                <main className="grow pt-20 lg:pt-24">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/Login" element={<Login />} />
+                        <Route path="/Register" element={<Register />} />
+                        <Route path="/DashBoard" element={<DashBoard />} />
+
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/" element={<div>Dashboard Work in Progress...</div>} />
+                        </Route>
+
+                        <Route path="*" element={<div className="flex items-center justify-center h-full text-zen-muted uppercase tracking-widest text-xs">
+                            Page Not Found
+                        </div>} />
+                    </Routes>
+                </main>
+
+                <Footer />
+            </div>
+        </Router>
+    );
+};
+
+export default App;
