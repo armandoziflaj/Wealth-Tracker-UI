@@ -5,6 +5,7 @@ export interface FormField {
     placeholder?: string;
     required?: boolean;
     width?: 'full' | 'half';
+    autocomplete?: string;
 }
 
 export interface GenericFormProps {
@@ -12,5 +13,5 @@ export interface GenericFormProps {
     onSubmit: (data: Record<string, string>) => void | Promise<void>;
     submitLabel: string;
     isLoading?: boolean;
-    error?: string;
+    error?: string | null;
 }

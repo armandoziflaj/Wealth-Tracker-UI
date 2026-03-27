@@ -1,51 +1,34 @@
-import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth.ts';
 import { authService } from '../api/authService';
 import { type RegisterCredentials } from '../types/auth.ts';
-import { type ApiResponse } from '../types';
-import axios, { AxiosError } from "axios";
 
 export const useRegister = () => {
-    const [errorMessage, setErrorMessage] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
     const { login } = useAuth();
-
     const navigate = useNavigate();
 
-    const handleRegister = async (credentials: RegisterCredentials) => {
-        setIsLoading(true);
-        setErrorMessage('');
-
-        try {
+    const mutation = useMutation({
+        mutationFn: async (credentials: RegisterCredentials) => {
             const response = await authService.register(credentials);
 
-            if (response.isSuccess ) {
-                login(response.data.token);
-                navigate('/dashboard');
-            } else {
-                setErrorMessage(response.message || 'Registration failed');
+            if (!response.isSuccess) {
+                throw new Error(response.errors?.join(". ") || 'Registration failed');
             }
-        } catch (err) {
-
-            if (axios.isAxiosError(err)) {
-                const axiosError = err as AxiosError<ApiResponse<null>>;
-                const apiResponse = axiosError.response?.data;
-
-                const message =
-                    apiResponse?.message ||
-                    "An unexpected error occurred";
-                console.log(apiResponse?.errors);
-
-                setErrorMessage(message);
-            } else {
-                setErrorMessage("Check your internet connection.");
-            }
-        } finally {
-            setIsLoading(false);
+            return response.data;
+        },
+        onSuccess: (data) => {
+            login(data.token);
+            navigate('/dashboard');
+        },
+        onError: (err: Error) => {
+            console.error("Registration Error:", err.message);
         }
-    };
+    });
 
-    return { handleRegister, errorMessage, isLoading };
+    return {
+        handleRegister: mutation.mutate,
+        isLoading: mutation.isPending,
+        errorMessage: mutation.error?.message || ''
+    };
 };

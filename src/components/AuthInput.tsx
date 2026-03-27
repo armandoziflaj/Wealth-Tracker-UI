@@ -6,6 +6,7 @@ interface AuthInputProps {
     placeholder?: string;
     name: string;
     required?: boolean;
+    autoComplete?: string;
 }
 
 export const AuthInput = ({
@@ -15,7 +16,9 @@ export const AuthInput = ({
                               type = 'text',
                               placeholder,
                               name,
-                              required = false // <--- Δώσε μια default τιμή
+                              required = false,
+                              autoComplete,
+                              ...props
                           }: AuthInputProps) => {
     return (
         <div className="flex flex-col gap-2 w-full">
@@ -23,6 +26,7 @@ export const AuthInput = ({
                 {label} {required && <span className="text-zen-neon">*</span>}
             </label>
             <input
+                {...props}
                 name={name}
                 type={type}
                 value={value}
@@ -31,6 +35,7 @@ export const AuthInput = ({
                 onChange={(e) => onChange(e.target.value)}
                 className="bg-zen-input border border-white/5 rounded-xl px-5 py-4 text-white
                            focus:outline-none focus:border-zen-neon/40 transition-all"
+                autoComplete={autoComplete}
             />
         </div>
     );

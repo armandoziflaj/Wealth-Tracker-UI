@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-
     --color-zen-deep: #0D0D0D;
     --color-zen-card: #1A1A1A;
     --color-zen-neon: #C6FF5E;

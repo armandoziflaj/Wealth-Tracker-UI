@@ -29,14 +29,16 @@ export const registerFields: FormField[] = [
         label: 'Password',
         type: 'password',
         placeholder: '••••••••',
-        required: true
+        required: true,
+        autocomplete : "current-password"
     },
     {
         id: 'passwordMap',
         label: 'Password',
         type: 'password',
         placeholder: '••••••••',
-        required: true
+        required: true ,
+        autocomplete : "current-password"
     },
 
 ];

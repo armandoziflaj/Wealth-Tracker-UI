@@ -14,7 +14,7 @@ export const ZenButton = ({
                               isLoading,
                               icon,
                               className = '',
-                              ...props // 1. Collect all remaining props (like onClick) here
+                              ...props
                           }: ZenButtonProps) => {
 
     const baseStyles = "inline-flex items-center justify-center font-bold tracking-wider transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:pointer-events-none uppercase text-[10px]";

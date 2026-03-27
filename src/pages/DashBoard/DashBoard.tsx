@@ -1,12 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
-import PieComponent from "../../components/Widgets/PieComponent.tsx";
-import LineChartW from "../../components/Widgets/LineChart.tsx";
-import WidgetCard from "../../components/Widgets/WidgetCard.tsx";
-import TransactionWidget from "../../components/Widgets/TransactionsWidget.tsx";
+import { useState, useEffect } from "react";
 import { ZenFilterBar, type FilterField } from "../../components/FilterBar.tsx";
-import { fetchFilteredTransactions } from "../../hooks/getTransactions.ts";
 import type { TransactionFilterDto, TransactionResponseDto } from "../../types/Transactions.ts";
-import { transformTransactionData } from "../../hooks/transformTransactionData.ts";
+import {fetchFilteredTransactions} from "../../api/apiTransactions.ts";
 
 const DASHBOARD_FILTERS: FilterField<TransactionFilterDto>[] = [
     { id: 'fromDate', label: 'From Date', type: 'date' },
@@ -15,8 +10,10 @@ const DASHBOARD_FILTERS: FilterField<TransactionFilterDto>[] = [
 
 const DashBoard = () => {
     const [filterValues, setFilterValues] = useState<TransactionFilterDto>({
-        fromDate: new Date().toISOString().split('T')[0],
-        toDate: new Date().toISOString().split('T')[0],
+        fromDate: new Date(),
+        toDate: new Date(),
+        pageNumber : 1,
+        pageSize: 20
     });
 
     const [transactions, setTransactions] = useState<TransactionResponseDto[]>([]);
@@ -25,8 +22,10 @@ const DashBoard = () => {
     const handleFetchData = async () => {
         setIsLoading(true);
         try {
-            const data = await fetchFilteredTransactions(filterValues);
-            setTransactions(data);
+            const response = await fetchFilteredTransactions(filterValues);
+            setTransactions(response.data);
+            filterValues.pageNumber = response.pageNumber;
+            filterValues.pageSize = response.pageSize;
         } catch (error) {
             console.error("Dashboard Fetch Error:", error);
             setTransactions([]);
@@ -37,21 +36,10 @@ const DashBoard = () => {
 
     useEffect(() => {
         handleFetchData().then(() => console.log("Fetched Transactions"));
-    }, []);
+    });
 
     const hasData = transactions.length > 0;
 
-    const cashFlowData = useMemo(() =>
-            transformTransactionData(transactions, 'monthly'),
-        [transactions]);
-
-    const incomeData = useMemo(() =>
-            transformTransactionData(transactions.filter(t => t.type === 0), 'category'),
-        [transactions]);
-
-    const expenseData = useMemo(() =>
-            transformTransactionData(transactions.filter(t => t.type === 1), 'category'),
-        [transactions]);
 
     return (
         <div className="min-h-screen bg-zen-deep p-8 pt-28 text-white selection:bg-zen-neon selection:text-black">
@@ -82,30 +70,30 @@ const DashBoard = () => {
                 </p>
                 <button
                 onClick={handleFetchData}
-            className="mt-4 text-zen-neon text-[10px] underline underline-offset-4 uppercase font-black hover:text-white transition-colors"
-        >
-            Refresh Dashboard
-        </button>
-</div>
+                className="mt-4 text-zen-neon text-[10px] underline underline-offset-4 uppercase font-black hover:text-white transition-colors"
+                >
+                    Refresh Dashboard
+                </button>
+        </div>
             ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <WidgetCard title="Cash Flow Analysis">
-                        <LineChartW data={cashFlowData} />
-                    </WidgetCard>
+                    {/*<WidgetCard title="Cash Flow Analysis">*/}
+                    {/*    <LineChartW data={cashFlowData} />*/}
+                    {/*</WidgetCard>*/}
 
-                    <WidgetCard title="Income Breakdown">
-                        <PieComponent data={incomeData} />
-                    </WidgetCard>
+                    {/*<WidgetCard title="Income Breakdown">*/}
+                    {/*    <PieComponent data={incomeData} />*/}
+                    {/*</WidgetCard>*/}
 
-                    <WidgetCard title="Expense Breakdown">
-                        <PieComponent data={expenseData} />
-                    </WidgetCard>
+                    {/*<WidgetCard title="Expense Breakdown">*/}
+                    {/*    <PieComponent data={expenseData} />*/}
+                    {/*</WidgetCard>*/}
 
-                    <div className="lg:col-span-2">
-                        <WidgetCard title="Recent Transactions">
-                            <TransactionWidget transactions={transactions} />
-                        </WidgetCard>
-                    </div>
+                    {/*<div className="lg:col-span-2">*/}
+                    {/*    <WidgetCard title="Recent Transactions">*/}
+                    {/*        <TransactionWidget transactions={transactions} />*/}
+                    {/*    </WidgetCard>*/}
+                    {/*</div>*/}
                 </div>
             )}
         </div>

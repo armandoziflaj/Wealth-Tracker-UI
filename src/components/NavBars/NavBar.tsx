@@ -1,10 +1,11 @@
-import { useAuth } from '../hooks/useAuth.ts';
+import { useAuth } from '../../hooks/useAuth.ts';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     const { isAuthenticated, logout } = useAuth();
 
     return (
+
         <nav className="fixed top-0 w-full z-50 bg-zen-deep/80 backdrop-blur-md border-b border-white/5">
             <div className="container mx-auto px-6 h-20 flex items-center justify-between">
 

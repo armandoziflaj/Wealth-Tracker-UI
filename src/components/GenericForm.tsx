@@ -1,9 +1,16 @@
-import { useState } from 'react';
-import { AuthInput } from './AuthInput';
-import { type GenericFormProps } from '../types/form.ts';
+import type {GenericFormProps} from "../types/form.ts";
+import {useState} from "react";
+import {AuthInput} from "./AuthInput.tsx";
 import {ZenButton} from "./ZenButton.tsx";
 
-export const GenericForm = ({ fields, onSubmit, submitLabel, isLoading, error }: GenericFormProps) => {
+export const GenericForm = ({
+                                fields,
+                                onSubmit,
+                                submitLabel,
+                                isLoading,
+                                error,
+                                ...rest
+                            }: GenericFormProps) => {
     const [formData, setFormData] = useState<Record<string, string>>({});
 
     const handleChange = (id: string, value: string) => {
@@ -11,7 +18,11 @@ export const GenericForm = ({ fields, onSubmit, submitLabel, isLoading, error }:
     };
 
     return (
-        <form onSubmit={(e) => { e.preventDefault(); onSubmit(formData); }} className="space-y-6">
+        <form
+            onSubmit={(e) => { e.preventDefault(); onSubmit(formData); }}
+            className="space-y-6"
+            {...rest}
+        >
             {error && <div className="bg-red-500/10 p-3 rounded-xl text-red-500 text-sm">{error}</div>}
 
             <div className="grid grid-cols-2 gap-4">
@@ -28,6 +39,7 @@ export const GenericForm = ({ fields, onSubmit, submitLabel, isLoading, error }:
                             onChange={(val) => handleChange(field.id, val)}
                             name={field.id}
                             required={field.required}
+                            autoComplete={field.autocomplete}
                         />
                     </div>
                 ))}

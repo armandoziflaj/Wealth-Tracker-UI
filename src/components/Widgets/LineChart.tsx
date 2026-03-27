@@ -21,7 +21,6 @@ const LineChartW = ({ data }: LineChartWProps) => {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    {/* 2. Use Hex codes for "neon" colors. 3. Use unique dataKeys. */}
                     <Line
                         type="monotone"
                         dataKey="revenue"

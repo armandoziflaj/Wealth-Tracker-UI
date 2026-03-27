@@ -7,7 +7,7 @@ const Login = () => {
     const { handleLogin, errorMessage: error, isLoading } = useLogin();
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-[80vh] pt-20">
+        <div className="flex flex-col items-center justify-center min-h-[90vh] py-10">
             <div className="w-full max-w-md bg-zen-card border border-white/5 p-10 rounded-[2.5rem] shadow-2xl">
                 <header className="text-center mb-10">
                     <h2 className="text-3xl font-black text-white italic">Welcome Back</h2>
