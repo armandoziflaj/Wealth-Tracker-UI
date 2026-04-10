@@ -1,16 +1,18 @@
+import type {TransactionType} from "./Transactions.ts";
+
 export interface CategoryResponse {
     id: number;
     name: string;
     color?: string;
-    icon?: string;
-    type: 'expense' | 'income';
+    type: TransactionType;
+    transactionTotal: number;
 }
 
-export interface CategoryCreateDto {
+export type CategoryCreateDto = {
     name: string;
-    color?: string;
-    icon?: string;
-}
+    color: string;
+    type: TransactionType;
+};
 
 export interface CategoryUpdateDto extends CategoryCreateDto {
     id: number;

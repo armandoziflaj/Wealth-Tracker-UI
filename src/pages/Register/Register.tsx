@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { GenericForm } from '../../components/GenericForm';
-import { useRegister } from '../../hooks/useRegister'; // Use the register hook
+import { GenericForm } from '../../components/GenericForm/GenericForm.tsx';
+import { useRegister } from '../../hooks/useRegister';
 import { registerFields } from './register.config.ts';
 import type {RegisterCredentials} from "../../types/auth.ts";
+import styles from './Register.module.css';
 
 export const Register = () => {
     const { handleRegister, errorMessage, isLoading } = useRegister();
@@ -12,14 +13,13 @@ export const Register = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-[90vh] py-10">
-            <div className="w-full max-w-xl bg-zen-card border border-white/5 p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+        <div className={styles.container}>
+            <div className={styles.card}>
+                <div className={styles.backgroundGlow} />
 
-                <div className="absolute -top-24 -right-24 w-64 h-64 bg-zen-neon/5 blur-[100px] rounded-full pointer-events-none" />
-
-                <header className="text-center mb-10">
-                    <h2 className="text-3xl font-black text-white italic tracking-tight">Create Account</h2>
-                    <p className="text-zen-muted text-sm mt-2">Join the elite circle of wealth builders.</p>
+                <header className={styles.header}>
+                    <h2 className={styles.title}>Create Account</h2>
+                    <p className={styles.subtitle}>Join the elite circle of wealth builders.</p>
                 </header>
 
                 <GenericForm
@@ -30,9 +30,9 @@ export const Register = () => {
                     error={errorMessage}
                 />
 
-                <p className="mt-8 text-center text-sm text-zen-muted">
+                <p className={styles.footer}>
                     Already have an account?{' '}
-                    <Link to="/login" className="text-zen-neon font-bold hover:underline underline-offset-4">
+                    <Link to="/login" className={styles.link}>
                         Sign In
                     </Link>
                 </p>

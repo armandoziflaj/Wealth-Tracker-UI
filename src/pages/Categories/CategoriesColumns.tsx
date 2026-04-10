@@ -1,48 +1,61 @@
-import type {Column} from "../../components/ZenGrid.tsx";
+import styles from "./CategoriesColumns.module.css";
 import type {CategoryResponse} from "../../types/Category.ts";
-import * as Icons from "lucide-react";
-import {type LucideIcon, Settings2} from "lucide-react";
+import type {Column} from "../../components/ZenGrid.tsx";
+import {TransactionType} from "../../types/Transactions.ts";
 
 export const columns: Column<CategoryResponse>[] = [
     {
-        header: 'Identity',
-        render: (cat: CategoryResponse) => {
-            const Icon = (Icons[cat.icon as keyof typeof Icons] as LucideIcon) || Icons.HelpCircle;
+        header: 'Vault Node',
+        render: (cat) => (
+            <div className={styles.nodeWrapper}>
+                <div
+                    className={styles.colorIndicator}
+                    style={{backgroundColor: cat.color}}
+                />
+                <span className={styles.nodeName}>{cat.name}</span>
+            </div>
+        )
+    },
+    {
+        header: 'Protocol',
+        render: (cat) => {
+            const isExpense = cat.type === TransactionType.Expense;
             return (
-                <div className="flex items-center gap-4">
-                    <div
-                        className="p-2.5 rounded-xl transition-all group-hover:scale-110"
-                        style={{ backgroundColor: `${cat.color}15`, color: cat.color }}
-                    >
-                        <Icon size={18} strokeWidth={2.2} />
-                    </div>
-                    <span className="font-bold tracking-tight text-white/90">{cat.name}</span>
-                </div>
+                <span className={styles.protocolBadge} style={{
+                    color: isExpense ? '#ff4d4d' : 'var(--accent)',
+                    borderColor: isExpense ? 'rgba(255, 77, 77, 0.15)' : 'rgba(198, 255, 94, 0.15)'
+                }}>
+                    {isExpense ? 'Expense' : 'Income'}
+                </span>
             );
         }
     },
     {
-        header: 'Classification',
-        render: (cat: CategoryResponse) => (
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 bg-white/5 border border-white/5 rounded-full text-zen-muted">
-                    {cat.type}
-                </span>
-        )
+        header: 'Vault Balance',
+        render: (cat: CategoryResponse) => {
+            const symbol = cat.transactionTotal === 0 ? '' : (cat.type === 0 ? '-' : '+');
+
+            return (
+                <span style={{
+                    color: cat.transactionTotal > 0 ? 'var(--text-main)' : 'var(--text-dim)',
+                    fontWeight: 800,
+                    fontFamily: 'JetBrains Mono, monospace',
+                    letterSpacing: '-0.02em'
+                }}>
+                {symbol}${cat.transactionTotal.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}
+            </span>
+            );
+        }
     },
     {
-        header: 'System ID',
-        className: 'hidden lg:block font-mono text-white/10 text-[10px]',
-        render: (cat: CategoryResponse) => `0x${cat.id.toString(16).toUpperCase()}`
-    },
-    {
-        header: 'Actions',
-        className: 'text-right',
-        render: () => (
-            <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="text-zen-muted hover:text-white p-2">
-                    <Settings2 size={16} />
-                </button>
-            </div>
+        header: 'Signature',
+        render: (cat) => (
+            <span className={styles.hexCode}>
+                {cat.color}
+            </span>
         )
     }
 ];

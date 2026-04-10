@@ -1,75 +1,122 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import {ZenGrid} from '../../components/ZenGrid.tsx';
-import { ZenButton } from '../../components/ZenButton.tsx';
-import { useCategories, useCreateCategory } from '../../hooks/useCategories.ts';
+import {ZenButton} from '../../components/ZenButton.tsx';
+import {useCategories, useCreateCategory, useDeleteCategory, useUpdateCategory} from '../../hooks/useCategories.ts';
 import type {FormField} from "../../types/form.ts";
-import type {CategoryCreateDto} from "../../types/Category.ts";
-import { FormModal } from '../../components/FormModal.tsx';
+import type {CategoryCreateDto, CategoryUpdateDto} from "../../types/Category.ts";
+import {FormModal} from '../../components/FormModal/FormModal.tsx';
 import {columns} from "./CategoriesColumns.tsx";
-import {Delete, Edit2, PlusCircle} from "lucide-react";
+import {PageHeader} from "../../components/PageHeader/PageHeader.tsx"; // Import this
+import styles from './Categories.module.css';
+import ModeOutlinedIcon from '@mui/icons-material/ModeOutlined';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import {TransactionType} from "../../types/Transactions.ts";
 
 export const Categories = () => {
-    const { data, isLoading } = useCategories();
-
+    const {data, isLoading} = useCategories();
     const createMutation = useCreateCategory();
-    const [areVisible, setAreVisible] = useState(false);
+    const deleteMutation = useDeleteCategory();
+    const updateMutation = useUpdateCategory();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedCategory, setSelectedCategory] = useState<CategoryUpdateDto | null>(null);
 
     const categoryFields: FormField[] = [
-        { id: 'name', label: 'Vault Name', type: 'text', placeholder: 'e.g., Rent', required: true },
-        { id: 'icon', label: 'Icon Name', type: 'text', placeholder: 'Home, Zap, ShoppingCart...', required: true },
-        { id: 'color', label: 'Theme Color', type: 'text', placeholder: '#00FFCC', required: true },
-        { id: 'type', label: 'Type', type: 'text', placeholder: 'expense or income', required: true },
+        {
+            id: 'name',
+            label: 'Vault Name',
+            type: 'text',
+            placeholder: 'e.g., Rent',
+            required: true,
+            defaultValue: selectedCategory?.name || '',
+        },
+        {
+            id: 'type',
+            label: 'Transaction Type',
+            type: 'select',
+            required: true,
+            options: [
+                {label: 'Expense', value: TransactionType.Expense},
+                {label: 'Income', value: TransactionType.Income}
+            ],
+            defaultValue: selectedCategory?.type ?? TransactionType.Expense
+        },
+        {
+            id: 'color',
+            label: 'Theme Color',
+            type: 'color',
+            required: true,
+            defaultValue: selectedCategory?.color || '#C6FF5E',
+        }
     ];
 
-    const handleCreateCategory = (formData: Record<string, unknown>) => {
-        const dto = formData as unknown as CategoryCreateDto;
+    const handleFormSubmit = async (values: CategoryCreateDto) => {
+        try {
+            const payload: CategoryCreateDto = {
+                ...values,
+                type: Number(values.type) as TransactionType
+            };
 
-        createMutation.mutate(dto, {
-            onSuccess: () => {
-                setIsModalOpen(false);
+            if (selectedCategory?.id) {
+                await updateMutation.mutateAsync({
+                    ...payload,
+                    id: selectedCategory.id
+                });
+            } else {
+                await createMutation.mutateAsync(payload);
             }
-        });
+
+            setIsModalOpen(false);
+            setSelectedCategory(null);
+        } catch (e) {
+            console.error("Operation failed:", e);
+        }
     };
 
     return (
-        <div className="p-6 md:p-12 max-w-7xl mx-auto space-y-12 min-h-screen">
-
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-                <div>
-                    <h1 className="text-5xl font-black tracking-tighter text-white uppercase italic">Vaults</h1>
-                    <p className="text-zen-muted text-[10px] uppercase tracking-[0.5em] mt-2 font-bold opacity-60">
-                        Category Node Management
-                    </p>
-                </div>
-
-                <div className="flex gap-3">
-                    <ZenButton
-                        variant="outline"
-                        size="sm"
-                        hidden={!areVisible}
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        <Delete size={16} />
-                    </ZenButton>
-                    <ZenButton
-                        variant="outline"
-                        size="sm"
-                        hidden={!areVisible}
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        <Edit2 size={16} />
-                    </ZenButton>
-                    <ZenButton
-                        variant="solid"
-                        size="sm"
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        <PlusCircle size={16} />
-                    </ZenButton>
-                </div>
-            </header>
+        <div className={styles.container}>
+            <PageHeader
+                title="VAU"
+                accentTitle="LTS"
+                subtitle="Category Node Management"
+                action={
+                    <div className={styles.buttonGroup}>
+                        <ZenButton
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                                if (selectedCategory?.id) {
+                                    deleteMutation.mutate(selectedCategory.id);
+                                    setSelectedCategory(null);
+                                }
+                            }}
+                            disabled={!selectedCategory?.id}
+                        >
+                            <DeleteForeverOutlinedIcon/>
+                        </ZenButton>
+                        <ZenButton
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setIsModalOpen(true)}
+                            disabled={!selectedCategory?.id}
+                        >
+                            <ModeOutlinedIcon/>
+                        </ZenButton>
+                        <ZenButton
+                            variant="solid"
+                            size="sm"
+                            onClick={() => {
+                                setSelectedCategory(null);
+                                setIsModalOpen(true);
+                            }}
+                        >
+                            <AddOutlinedIcon/>
+                        </ZenButton>
+                    </div>
+                }
+            />
 
             <ZenGrid
                 data={data || []}
@@ -78,22 +125,33 @@ export const Categories = () => {
                 currentPage={currentPage}
                 totalPages={1}
                 onPageChange={setCurrentPage}
+                selectedRowId={selectedCategory?.id}
                 onRowClick={(cat) => {
-                    setAreVisible(true);
-                    console.log("Selected:", cat.id);
+                    const updateData: CategoryUpdateDto = {
+                        ...cat,
+                        name: cat.name ?? 'Untitled Vault',
+                        color: cat.color ?? '#94A3B8',
+                        type: cat.type === TransactionType.Expense ? TransactionType.Expense
+                            : TransactionType.Income,
+                        id: cat.id
+                    };
+                    setSelectedCategory(updateData);
                 }}
             />
 
-            <FormModal
+            <FormModal<CategoryCreateDto>
+                key={selectedCategory?.id ?? 'create-mode'}
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Create New Category"
-                subtitle="Configure Category Parameters"
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedCategory(null);
+                }}
+                title={selectedCategory ? "Modify Vault" : "Create New Vault"}
+                submitLabel={selectedCategory ? "Update Configuration" : "Construct Vault"}
                 fields={categoryFields}
-                submitLabel="Construct Vault"
-                isSubmitting={createMutation.isPending}
-                error={createMutation.error?.message}
-                onSubmit={handleCreateCategory}
+                isSubmitting={createMutation.isPending || updateMutation.isPending}
+                error={createMutation.error?.message || updateMutation.error?.message}
+                onSubmit={handleFormSubmit}
             />
         </div>
     );

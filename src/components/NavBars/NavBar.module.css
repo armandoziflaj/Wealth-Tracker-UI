@@ -1,0 +1,128 @@
+.nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 50;
+    background-color: rgba(var(--bg-app), 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brandLink {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.logo {
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--accent);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.brandLink:hover .logo {
+    transform: rotate(12deg);
+}
+
+.logoText {
+    color: var(--zen-black);
+    font-weight: 900;
+    font-size: 1.25rem;
+}
+
+.brandName {
+    color: var(--text-main);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.05em;
+    text-decoration: none;
+}
+
+.brandName span {
+    color: var(--accent);
+}
+
+.navLinks {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.navLink {
+    color: var(--text-dim);
+    transition: color 0.2s;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.navLink:hover {
+    color: var(--accent);
+}
+
+.logoutButton {
+    background-color: rgba(var(--zen-white-rgb), 0.05);
+    color: var(--text-main);
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.logoutButton:hover {
+    background-color: rgba(var(--zen-white-rgb), 0.1);
+}
+
+.signInLink {
+    color: var(--text-main);
+    transition: color 0.2s;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.signInLink:hover {
+    color: var(--accent);
+}
+
+.getStartedLink {
+    background-color: var(--accent);
+    color: var(--zen-black);
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    transition: transform 0.2s;
+    text-decoration: none;
+}
+
+.getStartedLink:hover {
+    transform: scale(1.05);
+}
+
+.brandLink:visited,
+.brandLink:active {
+    text-decoration: none;
+    color: var(--text-main);
+}

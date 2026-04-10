@@ -1,17 +1,19 @@
 export interface FormField {
     id: string;
     label: string;
-    type: 'text' | 'email' | 'password' | 'number';
+    type: 'text' | 'email' | 'password' | 'number' | 'color' | 'select' | 'datetime' | 'date' | 'bool';
     placeholder?: string;
     required?: boolean;
     width?: 'full' | 'half';
     autocomplete?: string;
+    defaultValue?: string | number | boolean | null;
+    options?: { value: string | number; label: string }[];
 }
 
-export interface GenericFormProps {
+export interface GenericFormProps<T> {
     fields: FormField[];
-    onSubmit: (data: Record<string, string>) => void | Promise<void>;
     submitLabel: string;
-    isLoading?: boolean;
-    error?: string | null;
+    isLoading: boolean;
+    error?: string;
+    onSubmit: (data: T) => void | Promise<void>;
 }

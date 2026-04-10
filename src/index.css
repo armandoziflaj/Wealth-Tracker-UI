@@ -1,11 +1,74 @@
-@import "tailwindcss";
+:root {
+    --zen-deep: #0D0D0D;
+    --zen-card: #1A1A1A;
+    --zen-neon: #C6FF5E;
+    --zen-input: #262626;
+    --zen-muted: #9CA3AF;
+    --zen-error: #FF4D4D;
+    --zen-white: #FFFFFF;
+    --zen-black: #000000;
 
-@theme {
-    --color-zen-deep: #0D0D0D;
-    --color-zen-card: #1A1A1A;
-    --color-zen-neon: #C6FF5E;
-    --color-zen-input: #262626;
-    --color-zen-muted: #9CA3AF;
+    --zen-neon-rgb: 198, 255, 94;
+    --zen-white-rgb: 255, 255, 255;
+    --zen-black-rgb: 0, 0, 0;
 
-    --shadow-neon-glow: 0 0 20px rgba(198, 255, 94, 0.3);
+    --bg-app: var(--zen-deep);
+    --bg-surface: var(--zen-card);
+    --bg-input: var(--zen-input);
+
+    --text-main: var(--zen-white);
+    --text-dim: var(--zen-muted);
+
+    --accent: var(--zen-neon);
+    --color-error: var(--zen-error);
+    --border-color: rgba(var(--zen-white-rgb), 0.05);
+
+    --transition-speed: 0.3s;
+}
+
+[data-theme='light'] {
+    --zen-light-bg: #F9FAFB;
+    --zen-light-surface: #FFFFFF;
+    --zen-light-input: #E5E7EB;
+    --zen-light-text: #111827;
+    --zen-light-dim: #6B7280;
+    --zen-light-accent: #4FAD00;
+    --zen-light-error: #D32F2F;
+
+    --bg-app: var(--zen-light-bg);
+    --bg-surface: var(--zen-light-surface);
+    --bg-input: var(--zen-light-input);
+
+    --text-main: var(--zen-light-text);
+    --text-dim: var(--zen-light-dim);
+
+    --accent: var(--zen-light-accent);
+    --color-error: var(--zen-light-error);
+    --border-color: rgba(var(--zen-black-rgb), 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    background-color: #0D0D0D;
+}
+
+#root {
+    height: 100%;
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
 }

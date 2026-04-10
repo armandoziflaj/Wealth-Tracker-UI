@@ -1,101 +1,141 @@
-import { useState, useEffect } from "react";
-import { ZenFilterBar, type FilterField } from "../../components/FilterBar.tsx";
-import type { TransactionFilterDto, TransactionResponseDto } from "../../types/Transactions.ts";
-import {fetchFilteredTransactions} from "../../api/apiTransactions.ts";
+import {useState} from "react";
+import {ZenFilterBar, type FilterField} from "../../components/FilterBar/FilterBar.tsx";
+import type {TransactionFilterDto} from "../../types/Transactions.ts";
+import styles from './DashBoard.module.css';
+import LineChartW from "../../components/Widgets/LineChart.tsx";
+import {useCategorySummary, useFilteredTransactions, useMonthlySummary} from "../../hooks/useTransactions.ts";
+import SpendingPie from "../../components/Widgets/SpendingPie/SpendingPie.tsx";
+import WidgetCard from "../../components/Widgets/WidgetCard/WidgetCard.tsx";
+import TransactionWidget from "../../components/Widgets/TransactionWidget /TransactionsWidget.tsx";
+import {GenericModal} from "../../components/GenericModal/GenericModal.tsx";
+import {PageHeader} from "../../components/PageHeader/PageHeader.tsx";
 
 const DASHBOARD_FILTERS: FilterField<TransactionFilterDto>[] = [
-    { id: 'fromDate', label: 'From Date', type: 'date' },
-    { id: 'toDate', label: 'To Date', type: 'date' },
+    {id: 'fromDate', label: 'From Date', type: 'date'},
+    {id: 'toDate', label: 'To Date', type: 'date'},
 ];
 
 const DashBoard = () => {
     const [filterValues, setFilterValues] = useState<TransactionFilterDto>({
-        fromDate: new Date(),
+        fromDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         toDate: new Date(),
-        pageNumber : 1,
+        pageNumber: 1,
         pageSize: 20
     });
 
-    const [transactions, setTransactions] = useState<TransactionResponseDto[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const {
+        data: transactionsResponse,
+        isLoading: isTransactionsLoading,
+        refetch: refetchTransactions,
+        isError: isTransactionsError
+    } = useFilteredTransactions(filterValues);
 
-    const handleFetchData = async () => {
-        setIsLoading(true);
-        try {
-            const response = await fetchFilteredTransactions(filterValues);
-            setTransactions(response.data);
-            filterValues.pageNumber = response.pageNumber;
-            filterValues.pageSize = response.pageSize;
-        } catch (error) {
-            console.error("Dashboard Fetch Error:", error);
-            setTransactions([]);
-        } finally {
-            setIsLoading(false);
-        }
+    const {
+        data: summaryResponse,
+        isLoading: isSummaryLoading,
+        isError: isSummaryError
+    } = useMonthlySummary();
+
+    const {
+        data: categorySummaryResponse,
+        isLoading: isCategoryLoading,
+        isError: isCategoryError
+    } = useCategorySummary();
+
+    const transactions = transactionsResponse?.data ?? [];
+    const monthlySummary = summaryResponse?.data ?? [];
+    const categorySummary = categorySummaryResponse?.data ?? {
+        protocolFlow: [],
+        categoryExpenseAllocation: [],
+        categoryIncomeAllocation: []
     };
 
-    useEffect(() => {
-        handleFetchData().then(() => console.log("Fetched Transactions"));
-    });
+    const [isPieExpanded, setIsPieExpanded] = useState(false);
 
-    const hasData = transactions.length > 0;
-
+    const globalLoading = isTransactionsLoading || isSummaryLoading || isCategoryLoading;
 
     return (
-        <div className="min-h-screen bg-zen-deep p-8 pt-28 text-white selection:bg-zen-neon selection:text-black">
-            <header className="mb-10">
-                <h1 className="text-4xl font-black italic tracking-tighter text-white">
-                    DASH<span className="text-zen-neon">BOARD</span>
-                </h1>
-                <p className="text-zen-muted text-xs uppercase tracking-[0.3em] mt-1">
-                    Real-time financial intelligence
-                </p>
-            </header>
+        <div className={styles.dashboard}>
+            <PageHeader
+                title="DASH"
+                accentTitle="BOARD"
+                subtitle="Real-time financial intelligence"
+            />
 
             <ZenFilterBar<TransactionFilterDto>
                 fields={DASHBOARD_FILTERS}
                 values={filterValues}
-                onChange={(id, val) => setFilterValues(prev => ({ ...prev, [id]: val }))}
-                onApply={handleFetchData}
+                onChange={(id, val) => setFilterValues(prev => ({...prev, [id]: val}))}
+                onApply={refetchTransactions}
             />
 
-            {isLoading ? (
-                <div className="flex items-center justify-center h-64 ">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-zen-neon"></div>
+            {globalLoading ? (
+                <div className={styles.loadingContainer}>
+                    <div className={styles.spinner}></div>
                 </div>
-            ) : !hasData ? (
-                <div className="flex flex-col items-center justify-center h-64 w-full bg-zen-card rounded-2xl border border-white/5 border-dashed shadow-inner">
-                <p className="text-zen-muted uppercase tracking-[0.2em] text-[10px] font-black text-center px-6">
-                No intelligence found for the selected period
-                </p>
-                <button
-                onClick={handleFetchData}
-                className="mt-4 text-zen-neon text-[10px] underline underline-offset-4 uppercase font-black hover:text-white transition-colors"
-                >
-                    Refresh Dashboard
-                </button>
-        </div>
+            ) : isTransactionsError || isSummaryError || isCategoryError ? (
+                <div className={styles.noDataContainer}>
+                    <p className={styles.noDataText}>
+                        No intelligence found for the selected period
+                    </p>
+                    <button
+                        className={styles.refreshButton}
+                    >
+                        Refresh Dashboard
+                    </button>
+                </div>
             ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/*<WidgetCard title="Cash Flow Analysis">*/}
-                    {/*    <LineChartW data={cashFlowData} />*/}
-                    {/*</WidgetCard>*/}
+                <div className={styles.grid}>
+                    <WidgetCard
+                        title="Protocol Trends"
+                        subtitle="Global Intelligence"
+                        className={styles.span8}
+                    >
+                        <LineChartW data={monthlySummary}/>
+                    </WidgetCard>
 
-                    {/*<WidgetCard title="Income Breakdown">*/}
-                    {/*    <PieComponent data={incomeData} />*/}
-                    {/*</WidgetCard>*/}
+                    <WidgetCard
+                        title="Allocation"
+                        subtitle="Sector Distribution"
+                        className={`${styles.span4} ${styles.clickable}`}
+                        onClick={() => setIsPieExpanded(true)}
+                    >
+                        <div style={{pointerEvents: 'none', height: '100%', width: '100%'}}>
+                            <SpendingPie data={categorySummary.protocolFlow}/>
+                        </div>
+                    </WidgetCard>
 
-                    {/*<WidgetCard title="Expense Breakdown">*/}
-                    {/*    <PieComponent data={expenseData} />*/}
-                    {/*</WidgetCard>*/}
-
-                    {/*<div className="lg:col-span-2">*/}
-                    {/*    <WidgetCard title="Recent Transactions">*/}
-                    {/*        <TransactionWidget transactions={transactions} />*/}
-                    {/*    </WidgetCard>*/}
-                    {/*</div>*/}
+                    <WidgetCard
+                        title="Live Stream"
+                        subtitle="Real-time Data Nodes"
+                        className={styles.span12}
+                    >
+                        <TransactionWidget transactions={transactions}/>
+                    </WidgetCard>
                 </div>
             )}
+            <GenericModal
+                isOpen={isPieExpanded}
+                onClose={() => setIsPieExpanded(false)}
+                title="sector intelligence"
+                subtitle="detailed allocation breakdown"
+            >
+                <div className={styles.expandedcontainer} key={isPieExpanded ? 'open' : 'closed'}>
+                    <div className={styles.modalchart}>
+                        <h3 className={styles.modaltitle}>inflow distribution</h3>
+                        <div className={styles.piewrapper}>
+                            <SpendingPie data={categorySummary.categoryIncomeAllocation}/>
+                        </div>
+                    </div>
+
+                    <div className={styles.modalchart}>
+                        <h3 className={styles.modaltitle}>outflow distribution</h3>
+                        <div className={styles.piewrapper}>
+                            <SpendingPie data={categorySummary.categoryExpenseAllocation}/>
+                        </div>
+                    </div>
+                </div>
+            </GenericModal>
         </div>
     );
 }

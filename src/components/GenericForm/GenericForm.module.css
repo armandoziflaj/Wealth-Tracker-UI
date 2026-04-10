@@ -1,0 +1,183 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.fieldsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .fieldsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fullWidth {
+        grid-column: span 2;
+    }
+
+    .halfWidth {
+        grid-column: span 1;
+    }
+}
+
+.error {
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    color: var(--color-error);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid var(--color-error);
+    background-color: rgba(255, 77, 77, 0.05);
+    text-align: center;
+    animation: shake 0.4s ease-in-out;
+}
+
+.zenInput {
+    background-color: var(--bg-surface);
+    border-radius: 0.8rem;
+}
+
+.zenInput :global(.MuiInputLabel-root) {
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.zenInput :global(.MuiInputLabel-root.Mui-focused) {
+    color: var(--accent) !important;
+}
+
+.zenInput :global(.MuiOutlinedInput-root) {
+    background-color: var(--bg-input);
+    border-radius: 0.8rem;
+    color: var(--text-main);
+    transition: all var(--transition-speed);
+}
+
+.zenInput :global(.MuiOutlinedInput-notchedOutline) {
+    border-color: var(--border-color) !important;
+    border-width: 2px;
+}
+
+.zenInput :global(.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline) {
+    border-color: var(--text-dim) !important;
+}
+
+.zenInput :global(.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline) {
+    border-color: var(--accent) !important;
+}
+
+.zenInput :global(.MuiOutlinedInput-root.Mui-focused) {
+    background-color: var(--bg-surface);
+}
+
+.zenInput input[type="date"]::-webkit-calendar-picker-indicator,
+.zenInput input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity var(--transition-speed);
+}
+
+.zenInput input[type="date"]::-webkit-calendar-picker-indicator:hover,
+.zenInput input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+.zenSelect svg {
+    color: var(--text-dim) !important;
+}
+
+.zenDropdown {
+    background-color: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
+    margin-top: 4px;
+    box-shadow: 0 10px 25px var(--zen-black) !important;
+}
+
+.zenItem {
+    font-size: 0.9rem !important;
+    padding: 10px 16px !important;
+    transition: background var(--transition-speed) ease !important;
+    color: var(--text-main) !important;
+}
+
+.zenItem:hover {
+    background-color: rgba(var(--zen-white-rgb), 0.05) !important;
+}
+
+.zenItem[aria-selected="true"] {
+    background-color: rgba(var(--zen-neon-rgb), 0.15) !important;
+    color: var(--accent) !important;
+}
+
+.switchWrapper {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    padding: 0 1rem;
+    background-color: var(--bg-input);
+    border: 2px solid var(--border-color);
+    border-radius: 0.8rem;
+    transition: all var(--transition-speed) ease;
+}
+
+.switchWrapper:hover {
+    border-color: var(--text-dim);
+}
+
+.switchLabel {
+    margin: 0;
+    width: 100%;
+    user-select: none;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: color var(--transition-speed);
+}
+
+.switchWrapper:hover .switchLabel {
+    color: var(--text-main);
+}
+
+.zenSwitch :global(.Mui-checked) {
+    color: var(--accent) !important;
+}
+
+.zenSwitch :global(.Mui-checked + .MuiSwitch-track) {
+    background-color: var(--accent) !important;
+    opacity: 0.5 !important;
+}
+
+.zenInput input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--bg-input) inset !important;
+    -webkit-text-fill-color: var(--text-main) !important;
+    caret-color: var(--text-main);
+    border-radius: inherit;
+}
+
+.submitButton {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
+}

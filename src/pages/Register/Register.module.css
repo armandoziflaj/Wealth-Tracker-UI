@@ -1,0 +1,69 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+}
+
+.card {
+    width: 100%;
+    max-width: 36rem;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 2.5rem;
+    border-radius: 2.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.backgroundGlow {
+    position: absolute;
+    top: -6rem;
+    right: -6rem;
+    width: 16rem;
+    height: 16rem;
+    background-color: rgba(var(--zen-neon-rgb), 0.05);
+    filter: blur(100px);
+    border-radius: 9999px;
+    pointer-events: none;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.title {
+    font-size: 1.875rem;
+    font-weight: 900;
+    color: var(--text-main);
+    font-style: italic;
+    letter-spacing: -0.025em;
+}
+
+.subtitle {
+    color: var(--text-dim);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--text-dim);
+}
+
+.link {
+    color: var(--accent);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}

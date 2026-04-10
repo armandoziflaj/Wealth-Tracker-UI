@@ -15,5 +15,20 @@ export interface AuthData {
     token: string;
 }
 
-export type CategoryData = { name: string; value: number; fill: string };
-export type MonthlyData = { name: string; revenue: number; expenses: number };
+export type CategoryData = {
+    name: string;
+    value: number;
+    fill: string;
+};
+
+export interface DashboardData {
+    protocolFlow: CategoryData[];
+    categoryExpenseAllocation: CategoryData[];
+    categoryIncomeAllocation: CategoryData[];
+}
+
+export type MonthlyData = {
+    name: string;
+    revenue: number;
+    expenses: number
+};

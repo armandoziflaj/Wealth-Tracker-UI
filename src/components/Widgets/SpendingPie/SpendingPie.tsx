@@ -1,11 +1,11 @@
-import { PieChart, Pie, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import type {CategoryData} from "../../types";
+import {PieChart, Pie, ResponsiveContainer, Tooltip, Legend} from 'recharts';
+import type {CategoryData} from "../../../types";
 
 interface SpendingPieProps {
-    data: CategoryData[] ;
+    data: CategoryData[];
 }
 
-const SpendingPie = ({data} : SpendingPieProps) => {
+const SpendingPie = ({data}: SpendingPieProps) => {
     return (
         <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -21,12 +21,12 @@ const SpendingPie = ({data} : SpendingPieProps) => {
                 />
                 <Tooltip
                     contentStyle={{
-                        backgroundColor: '#1e293b',
+                        backgroundColor: 'var(--bg-surface)',
                         border: '1px solid rgba(255,255,255,0.2)',
                         borderRadius: '8px',
                     }}
                 />
-                <Legend />
+                <Legend/>
             </PieChart>
         </ResponsiveContainer>
     );
