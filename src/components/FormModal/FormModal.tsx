@@ -1,14 +1,12 @@
-import {Modal, Box, Typography, Fade, IconButton} from "@mui/material";
 import {GenericForm} from '../GenericForm/GenericForm.tsx';
 import type {FormField} from "../../types/form.ts";
-import styles from './FormModal.module.css';
-import CloseIcon from '@mui/icons-material/Close';
-
+import {GenericModal} from "../GenericModal/GenericModal.tsx";
 
 interface FormModalProps<T> {
     isOpen: boolean;
     onClose: () => void;
     title: string;
+    subtitle?: string;
     fields: FormField[];
     submitLabel: string;
     isSubmitting: boolean;
@@ -20,6 +18,7 @@ export const FormModal = <T extends Record<string, unknown>>({
                                                                  isOpen,
                                                                  onClose,
                                                                  title,
+                                                                 subtitle,
                                                                  fields,
                                                                  submitLabel,
                                                                  isSubmitting,
@@ -27,35 +26,20 @@ export const FormModal = <T extends Record<string, unknown>>({
                                                                  onSubmit,
                                                              }: FormModalProps<T>) => {
     return (
-        <Modal
-            open={isOpen}
+        <GenericModal
+            isOpen={isOpen}
             onClose={onClose}
-            closeAfterTransition
+            title={title}
+            subtitle={subtitle}
+            size="md"
         >
-            <Fade in={isOpen}>
-                <Box className={styles.modalContent}>
-                    <Box className={styles.header}>
-                        <Typography className={styles.title}>
-                            {title}
-                        </Typography>
-                    </Box>
-
-                    <IconButton
-                        onClick={onClose}
-                        className={styles.closeButton}
-                    >
-                        <CloseIcon fontSize="small"/>
-                    </IconButton>
-
-                    <GenericForm<T>
-                        fields={fields}
-                        submitLabel={submitLabel}
-                        isLoading={isSubmitting}
-                        error={error}
-                        onSubmit={onSubmit}
-                    />
-                </Box>
-            </Fade>
-        </Modal>
+            <GenericForm<T>
+                fields={fields}
+                submitLabel={submitLabel}
+                isLoading={isSubmitting}
+                error={error}
+                onSubmit={onSubmit}
+            />
+        </GenericModal>
     );
 };

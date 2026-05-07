@@ -1,11 +1,11 @@
-import {ZenButton} from "../ZenButton.tsx";
+import {ZenButton} from "../ZenButton/ZenButton.tsx";
 import {useAuth} from "../../hooks/useAuth.ts";
 import styles from './Sidebar.module.css';
 import {Link} from "react-router-dom";
 import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
-import TrackChangesOutlinedIcon from '@mui/icons-material/TrackChangesOutlined';
+import {CloudUpload} from '@mui/icons-material';
 import {ThemeToggle} from "../ThemeToogle/ThemeToggle.tsx";
 
 
@@ -48,13 +48,13 @@ const Sidebar = () => {
                         Categories
                     </ZenButton>
                 </Link>
-                <Link to="/">
+                <Link to="/DataUpload">
                     <ZenButton
                         variant="ghost"
                         className={styles.navButton}
-                        icon={<TrackChangesOutlinedIcon/>}
+                        icon={<CloudUpload/>}
                     >
-                        Budget Goals
+                        Data Upload
                     </ZenButton>
                 </Link>
             </nav>

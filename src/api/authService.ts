@@ -10,7 +10,7 @@ export const authService = {
         const response = await apiClient.post<BaseResponse<AuthData>>(
             '/auth/login',
             credentials,
-            { signal }
+            {signal}
         );
         return response.data;
     },
@@ -22,7 +22,19 @@ export const authService = {
         const response = await apiClient.post<BaseResponse<AuthData>>(
             '/auth/register',
             credentials,
-            { signal }
+            {signal}
+        );
+        return response.data;
+    },
+
+    googleLogin: async (
+        data: { googleToken: string },
+        signal?: AbortSignal
+    ): Promise<BaseResponse<AuthData>> => {
+        const response = await apiClient.post<BaseResponse<AuthData>>(
+            '/auth/google-login',
+            data,
+            {signal}
         );
         return response.data;
     }

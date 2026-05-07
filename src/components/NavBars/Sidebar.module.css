@@ -8,7 +8,6 @@
     padding: 2rem;
     position: sticky;
     top: 0;
-    display: none;
 }
 
 @media (min-width: 768px) {

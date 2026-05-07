@@ -1,6 +1,6 @@
 import {useState} from 'react';
-import {ZenGrid} from '../../components/ZenGrid.tsx';
-import {ZenButton} from '../../components/ZenButton.tsx';
+import {ZenGrid} from '../../components/ZenGrid/ZenGrid.tsx';
+import {ZenButton} from '../../components/ZenButton/ZenButton.tsx';
 import {useCategories, useCreateCategory, useDeleteCategory, useUpdateCategory} from '../../hooks/useCategories.ts';
 import type {FormField} from "../../types/form.ts";
 import type {CategoryCreateDto, CategoryUpdateDto} from "../../types/Category.ts";
@@ -12,13 +12,53 @@ import ModeOutlinedIcon from '@mui/icons-material/ModeOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import {TransactionType} from "../../types/Transactions.ts";
+import {useZenStore} from "../../components/ZenStore.tsx";
 
 export const Categories = () => {
+    const notify = useZenStore((state) => state.notify);
     const {data, isLoading} = useCategories();
     const createMutation = useCreateCategory();
     const deleteMutation = useDeleteCategory();
     const updateMutation = useUpdateCategory();
 
+    const handleFormSubmit = async (values: CategoryCreateDto) => {
+        try {
+            const payload: CategoryCreateDto = {
+                ...values,
+                type: Number(values.type) as TransactionType
+            };
+
+            if (selectedCategory?.id) {
+                await updateMutation.mutateAsync({...payload, id: selectedCategory.id});
+                notify(`Vault "${payload.name}" reconfigured.`, "success", "Success");
+            } else {
+                await createMutation.mutateAsync(payload);
+                notify(`New vault "${payload.name}" constructed.`, "success", "Success");
+            }
+
+            setIsModalOpen(false);
+            setSelectedCategory(null);
+        } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : "Protocol synchronization failed.";
+            notify(msg, "error", "Fail");
+            console.log(err);
+        }
+    };
+    const handleDelete = async () => {
+        if (!selectedCategory?.id) return;
+
+        try {
+            await deleteMutation.mutateAsync(selectedCategory.id);
+            notify("Vault deleted successfully.", "success", "Success");
+            setSelectedCategory(null);
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error
+                ? err.message
+                : "System failure: Database constraint violation.";
+            notify(errorMessage, "error", "Error");
+            console.log("Delete operation halted.");
+        }
+    };
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCategory, setSelectedCategory] = useState<CategoryUpdateDto | null>(null);
@@ -52,29 +92,6 @@ export const Categories = () => {
         }
     ];
 
-    const handleFormSubmit = async (values: CategoryCreateDto) => {
-        try {
-            const payload: CategoryCreateDto = {
-                ...values,
-                type: Number(values.type) as TransactionType
-            };
-
-            if (selectedCategory?.id) {
-                await updateMutation.mutateAsync({
-                    ...payload,
-                    id: selectedCategory.id
-                });
-            } else {
-                await createMutation.mutateAsync(payload);
-            }
-
-            setIsModalOpen(false);
-            setSelectedCategory(null);
-        } catch (e) {
-            console.error("Operation failed:", e);
-        }
-    };
-
     return (
         <div className={styles.container}>
             <PageHeader
@@ -87,10 +104,7 @@ export const Categories = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                                if (selectedCategory?.id) {
-                                    deleteMutation.mutate(selectedCategory.id);
-                                    setSelectedCategory(null);
-                                }
+                                handleDelete();
                             }}
                             disabled={!selectedCategory?.id}
                         >
@@ -150,7 +164,6 @@ export const Categories = () => {
                 submitLabel={selectedCategory ? "Update Configuration" : "Construct Vault"}
                 fields={categoryFields}
                 isSubmitting={createMutation.isPending || updateMutation.isPending}
-                error={createMutation.error?.message || updateMutation.error?.message}
                 onSubmit={handleFormSubmit}
             />
         </div>

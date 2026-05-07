@@ -4,7 +4,7 @@ import styles from './MobileNav.module.css';
 import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
-import TrackChangesOutlinedIcon from '@mui/icons-material/TrackChangesOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export const MobileNav = () => {
     const location = useLocation();
@@ -28,15 +28,11 @@ export const MobileNav = () => {
                 <span className={styles.navLinkText}>Categories</span>
             </Link>
 
-            <Link to="/Goals" className={`${styles.navLink} ${isActive('/Goals') ? styles.active : ''}`}>
-                <TrackChangesOutlinedIcon/>
-                <span className={styles.navLinkText}>Goals</span>
-            </Link>
-
             <button
                 onClick={logout}
                 className={styles.logoutButton}
             >
+                <LogoutIcon/>
                 <span className={styles.navLinkText}>Exit</span>
             </button>
         </nav>

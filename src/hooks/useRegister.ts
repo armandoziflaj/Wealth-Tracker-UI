@@ -1,21 +1,27 @@
-import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from './useAuth.ts';
-import { authService } from '../api/authService';
-import { type RegisterCredentials } from '../types/auth.ts';
+import {useMutation} from '@tanstack/react-query';
+import {useNavigate} from 'react-router-dom';
+import {useAuth} from './useAuth.ts';
+import {authService} from '../api/authService';
+import {type RegisterCredentials} from '../types/auth.ts';
+import {handleApiError} from "./handleApiErrors.ts";
 
 export const useRegister = () => {
-    const { login } = useAuth();
+    const {login} = useAuth();
     const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationFn: async (credentials: RegisterCredentials) => {
-            const response = await authService.register(credentials);
+            try {
+                const response = await authService.register(credentials);
 
-            if (!response.isSuccess) {
-                throw new Error(response.errors?.join(". ") || 'Registration failed');
+                if (!response.isSuccess) {
+                    const serverMessage = response.errors?.join(". ") || 'Registration failed';
+                    throw new Error(serverMessage);
+                }
+                return response.data;
+            } catch (err) {
+                return handleApiError(err);
             }
-            return response.data;
         },
         onSuccess: (data) => {
             login(data.token);

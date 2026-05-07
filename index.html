@@ -1,25 +1,26 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <link href="/logo.svg" rel="icon" type="image/svg+xml"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <script>
-      (function() {
-        try {
-          var theme = localStorage.getItem('theme');
-          var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-          if (!theme && supportDarkMode) theme = 'dark';
-          if (!theme) theme = 'dark';
+        (function () {
+            try {
+                let theme = localStorage.getItem('theme');
+                let supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+                if (!theme && supportDarkMode) theme = 'dark';
+                if (!theme) theme = 'dark';
 
-          document.documentElement.setAttribute('data-theme', theme);
-        } catch (e) {}
-      })();
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {
+            }
+        })();
     </script>
-    <title>wealthtracker-ui</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <title>Wealth Tracker</title>
+</head>
+<body>
+<div id="root"></div>
+<script src="/src/main.tsx" type="module"></script>
+</body>
 </html>

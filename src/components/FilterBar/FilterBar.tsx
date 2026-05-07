@@ -1,4 +1,4 @@
-import {ZenButton} from '../ZenButton.tsx';
+import {ZenButton} from '../ZenButton/ZenButton.tsx';
 import styles from './FilterBar.module.css';
 
 type FilterValue = string | number | boolean | null | undefined;
@@ -47,6 +47,7 @@ export const ZenFilterBar = <T extends object>({
                                     className={`${styles.input} ${styles.dateInput}`}
                                     value={(currentValue as string) || ''}
                                     onChange={(e) => onChange(field.id, e.target.value)}
+                                    style={{colorScheme: 'dark'}}
                                 />
                             )}
 

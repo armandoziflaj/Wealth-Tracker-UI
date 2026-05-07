@@ -50,6 +50,28 @@
     margin-top: 0.5rem;
 }
 
+.separator {
+    margin: 1.5rem 0;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    line-height: 0.1em;
+}
+
+.separator span {
+    background: var(--bg-surface);
+    padding: 0 15px;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.googleWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
 .footer {
     margin-top: 2rem;
     text-align: center;

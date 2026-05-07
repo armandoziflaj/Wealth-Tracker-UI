@@ -1,9 +1,9 @@
 .nav {
-    position: fixed;
+    position: sticky;
     top: 0;
     width: 100%;
     z-index: 50;
-    background-color: rgba(var(--bg-app), 0.8);
+    background-color: color-mix(in srgb, var(--bg-app), transparent 20%);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-color);
 }

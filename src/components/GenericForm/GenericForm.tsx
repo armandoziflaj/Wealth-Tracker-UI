@@ -1,6 +1,6 @@
 import type {GenericFormProps} from "../../types/form.ts";
 import {useState} from "react";
-import {ZenButton} from "../ZenButton.tsx";
+import {ZenButton} from "../ZenButton/ZenButton.tsx";
 import styles from './GenericForm.module.css';
 import TextField from '@mui/material/TextField';
 import {ColorSelector} from "../ColorSelector/ColorSelector.tsx";
@@ -23,7 +23,11 @@ export const GenericForm = <T extends Record<string, unknown>>({
                 if (f.type === 'datetime' && typeof f.defaultValue === 'string') {
                     initial[f.id] = f.defaultValue.substring(0, 16);
                 } else if (f.type === 'bool') {
-                    initial[f.id] = String(f.defaultValue);
+                    initial[f.id] = f.defaultValue.toString();
+                } else if (f.type === 'number') {
+                    initial[f.id] = typeof f.defaultValue === 'number'
+                        ? f.defaultValue.toFixed(2)
+                        : String(f.defaultValue);
                 } else {
                     initial[f.id] = String(f.defaultValue);
                 }
@@ -38,6 +42,8 @@ export const GenericForm = <T extends Record<string, unknown>>({
                     initial[f.id] = '#94A3B8';
                 } else if (f.type === 'bool') {
                     initial[f.id] = 'false';
+                } else if (f.type === 'number') {
+                    initial[f.id] = '0.00';
                 } else {
                     initial[f.id] = '';
                 }
@@ -63,96 +69,121 @@ export const GenericForm = <T extends Record<string, unknown>>({
             {error && <div className={styles.error}>{error}</div>}
 
             <div className={styles.fieldsGrid}>
-                {fields.map((field) => (
-                    <div
-                        key={field.id}
-                        className={field.width === 'half' ? styles.halfWidth : styles.fullWidth}
-                    >
-                        {field.type === 'color' ? (
-                            <ColorSelector
-                                selectedColor={formData[field.id] || '#9CA3AF'}
-                                onSelect={(color) => handleChange(field.id, color)}
-                            />
-                        ) : field.type === 'select' ? (
-                            <FormControl fullWidth variant="outlined" className={styles.zenInput}>
-                                <InputLabel
-                                    id={`${field.id}-label`}
-                                    required={field.required}>{field.label}
-                                </InputLabel>
-                                <Select
-                                    labelId={`${field.id}-label`}
-                                    id={field.id}
-                                    value={formData[field.id] || ''}
-                                    label={field.label}
-                                    onChange={(e) => handleChange(field.id, e.target.value)}
-                                    className={styles.zenSelect}
-                                    MenuProps={{
-                                        classes: {paper: styles.zenDropdown}
-                                    }}
-                                    required={field.required}
-                                >
-                                    {field.options?.map((option) => (
-                                        <MenuItem key={option.value} value={option.value} className={styles.zenItem}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        ) : field.type === 'bool' ? (
-                            <div className={styles.switchWrapper}>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={formData[field.id] === 'true'}
-                                            onChange={(e) => handleChange(field.id, e.target.checked ? 'true' : 'false')}
-                                            color="primary"
-                                            className={styles.zenSwitch}
-                                        />
-                                    }
-                                    label={field.label}
-                                    className={styles.switchLabel}
+                {fields
+                    .filter(field => !field.showIf || field.showIf(formData))
+                    .map((field) => (
+                        <div
+                            key={field.id}
+                            className={field.width === 'half' ? styles.halfWidth : styles.fullWidth}
+                        >
+                            {field.type === 'color' ? (
+                                <ColorSelector
+                                    selectedColor={formData[field.id] || '#9CA3AF'}
+                                    onSelect={(color) => handleChange(field.id, color)}
                                 />
-                            </div>
-                        ) : field.type === 'datetime' ? (
-                            <TextField
-                                label={field.label}
-                                type="datetime-local"
-                                value={formData[field.id] || ''}
-                                onChange={(e) => handleChange(field.id, e.target.value)}
-                                required={field.required}
-                                fullWidth
-                                placeholder={field.placeholder}
-                                variant="outlined"
-                                className={styles.zenInput}
-                            />
-                        ) : field.type === 'date' ? (
-                            <TextField
-                                label={field.label}
-                                type="date"
-                                value={formData[field.id] || ''}
-                                onChange={(e) => handleChange(field.id, e.target.value)}
-                                required={field.required}
-                                fullWidth
-                                variant="outlined"
-                                className={styles.zenInput}
-                            />
-                        ) : (
-                            <TextField
-                                label={field.label}
-                                type={field.type}
-                                placeholder={field.placeholder}
-                                value={formData[field.id] || ''}
-                                onChange={(val) => handleChange(field.id, val.target.value)}
-                                name={field.id}
-                                required={field.required}
-                                autoComplete={field.autocomplete}
-                                fullWidth
-                                variant="outlined"
-                                className={styles.zenInput}
-                            />
-                        )}
-                    </div>
-                ))}
+                            ) : field.type === 'select' ? (
+                                <FormControl fullWidth variant="outlined" className={styles.zenInput}>
+                                    <InputLabel
+                                        id={`${field.id}-label`}
+                                        required={field.required}>{field.label}
+                                    </InputLabel>
+                                    <Select
+                                        labelId={`${field.id}-label`}
+                                        id={field.id}
+                                        value={formData[field.id] || ''}
+                                        label={field.label}
+                                        onChange={(e) => handleChange(field.id, e.target.value)}
+                                        className={styles.zenSelect}
+                                        MenuProps={{
+                                            classes: {paper: styles.zenDropdown}
+                                        }}
+                                        required={field.required}
+                                    >
+                                        {field.options?.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}
+                                                      className={styles.zenItem}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            ) : field.type === 'bool' ? (
+                                <div className={styles.switchWrapper}>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={formData[field.id] === 'true'}
+                                                onChange={(e) => handleChange(field.id, e.target.checked ? 'true' : 'false')}
+                                                color="primary"
+                                                className={styles.zenSwitch}
+                                            />
+                                        }
+                                        label={field.label}
+                                        className={styles.switchLabel}
+                                    />
+                                </div>
+                            ) : field.type === 'datetime' ? (
+                                <TextField
+                                    label={field.label}
+                                    type="datetime-local"
+                                    value={formData[field.id] || ''}
+                                    onChange={(e) => handleChange(field.id, e.target.value)}
+                                    required={field.required}
+                                    fullWidth
+                                    placeholder={field.placeholder}
+                                    variant="outlined"
+                                    className={styles.zenInput}
+                                    slotProps={{
+                                        inputLabel: {
+                                            shrink: true,
+                                        },
+                                        htmlInput: {
+                                            style: {colorScheme: 'dark'}
+                                        }
+                                    }}
+                                />
+                            ) : field.type === 'date' ? (
+                                <TextField
+                                    label={field.label}
+                                    type="date"
+                                    value={formData[field.id] || ''}
+                                    onChange={(e) => handleChange(field.id, e.target.value)}
+                                    required={field.required}
+                                    fullWidth
+                                    variant="outlined"
+                                    className={styles.zenInput}
+                                    slotProps={{
+                                        inputLabel: {
+                                            shrink: true,
+                                        },
+                                        htmlInput: {
+                                            style: {colorScheme: 'dark'}
+                                        }
+                                    }}
+                                />
+                            ) : (
+                                <TextField
+                                    label={field.label}
+                                    type={field.type}
+                                    placeholder={field.placeholder}
+                                    value={formData[field.id] || ''}
+                                    onChange={(val) => handleChange(field.id, val.target.value)}
+                                    name={field.id}
+                                    required={field.required}
+                                    autoComplete={field.autocomplete}
+                                    fullWidth
+                                    variant="outlined"
+                                    className={styles.zenInput}
+                                    slotProps={{
+                                        htmlInput: {
+                                            step: field.type === 'number' ? '0.01' : undefined,
+                                            inputMode: field.type === 'number' ? 'decimal' : undefined
+                                        }
+                                    }}
+                                />
+                            )}
+                        </div>
+                    ))}
             </div>
 
             <ZenButton

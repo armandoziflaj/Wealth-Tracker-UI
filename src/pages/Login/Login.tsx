@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
-import { GenericForm } from '../../components/GenericForm/GenericForm.tsx';
-import { useLogin } from '../../hooks/useLogin';
-import { loginFields } from './login.config';
+import {Link} from 'react-router-dom';
+import {GenericForm} from '../../components/GenericForm/GenericForm.tsx';
+import {useLogin} from '../../hooks/useLogin';
+import {loginFields} from './login.config';
 import styles from './Login.module.css';
+import {GoogleAuthButton} from "../../components/ZenButton/GoogleButton/GoogleAuthButton.tsx";
 
 const Login = () => {
-    const { handleLogin, errorMessage: error, isLoading } = useLogin();
+    const {handleLogin, handleGoogleLogin, errorMessage, isLoading} = useLogin();
 
     return (
         <div className={styles.container}>
@@ -20,8 +21,19 @@ const Login = () => {
                     onSubmit={handleLogin}
                     submitLabel="Sign In"
                     isLoading={isLoading}
-                    error={error}
+                    error={errorMessage}
                 />
+
+                <div className={styles.separator}>
+                    <span>OR</span>
+                </div>
+
+                <div className={styles.googleWrapper}>
+                    <GoogleAuthButton
+                        onSuccess={(token) => handleGoogleLogin(token)}
+                        isLoading={isLoading}
+                    />
+                </div>
 
                 <p className={styles.footer}>
                     Don't have an account?{' '}
@@ -33,4 +45,5 @@ const Login = () => {
         </div>
     );
 };
-export default Login
+
+export default Login;

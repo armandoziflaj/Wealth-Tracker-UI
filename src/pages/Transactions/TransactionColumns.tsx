@@ -1,6 +1,6 @@
 import styles from "./TransactionsColumns.module.css";
 import type {TransactionResponseDto} from "../../types/Transactions.ts";
-import type {Column} from "../../components/ZenGrid.tsx";
+import type {Column} from "../../components/ZenGrid/ZenGrid.tsx";
 import {TransactionType} from "../../types/Transactions.ts";
 
 export const columns: Column<TransactionResponseDto>[] = [

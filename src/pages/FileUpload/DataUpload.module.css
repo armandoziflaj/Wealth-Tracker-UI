@@ -1,0 +1,235 @@
+.importContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.ingestionConsole {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.consoleHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.titleGroup {
+    border-left: 3px solid var(--accent);
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.consoleTitle {
+    color: var(--text-main);
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0;
+}
+
+.consoleSubtitle {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+.templateBtn {
+    white-space: nowrap;
+    color: var(--accent) !important;
+    border: 1px solid rgba(var(--zen-neon-rgb), 0.2) !important;
+    background: transparent !important;
+    transition: all var(--transition-speed) ease !important;
+}
+
+.templateBtn:hover:not(:disabled) {
+    background: rgba(var(--zen-neon-rgb), 0.05) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 20px rgba(var(--zen-neon-rgb), 0.15);
+    transform: translateY(-2px);
+}
+
+.templateBtn:disabled {
+    opacity: 0.4 !important;
+    border-style: dashed !important;
+}
+
+.dropzoneWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.feedback {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 1.5rem;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.5;
+    animation: reveal 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feedbackText {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.success {
+    background: rgba(var(--zen-neon-rgb), 0.05);
+    border: 1px solid rgba(var(--zen-neon-rgb), 0.2);
+    color: var(--accent);
+}
+
+.error {
+    background: rgba(255, 77, 77, 0.05);
+    border: 1px solid rgba(255, 77, 77, 0.2);
+    color: var(--zen-error);
+}
+
+.actionContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    animation: fadeIn 0.6s ease;
+}
+
+.resetButton {
+    background-color: var(--bg-surface);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 1.25rem 2.5rem;
+    border-radius: 14px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all var(--transition-speed);
+}
+
+.resetButton:hover {
+    background-color: var(--accent);
+    color: var(--zen-black);
+    box-shadow: 0 0 30px rgba(var(--zen-neon-rgb), 0.3);
+    transform: translateY(-2px);
+}
+
+.resetButton:active {
+    transform: translateY(0);
+}
+
+.docSection {
+    margin-top: 2rem;
+    padding: 2.5rem;
+    background-color: var(--bg-surface);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.docHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.infoMainIcon {
+    color: var(--accent);
+    font-size: 1.75rem !important;
+}
+
+.docTitle {
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.infoList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.infoItem {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    color: var(--text-dim);
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent);
+    flex-shrink: 0;
+}
+
+@keyframes reveal {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .importContainer {
+        gap: 2.5rem;
+    }
+
+    .consoleHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .templateBtn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .docSection {
+        padding: 1.5rem;
+    }
+
+    .resetButton {
+        width: 100%;
+    }
+}

@@ -8,6 +8,8 @@ export interface FormField {
     autocomplete?: string;
     defaultValue?: string | number | boolean | null;
     options?: { value: string | number; label: string }[];
+    step?: string | number;
+    showIf?: (values: Record<string, unknown>) => boolean;
 }
 
 export interface GenericFormProps<T> {

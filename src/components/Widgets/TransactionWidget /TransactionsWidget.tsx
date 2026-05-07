@@ -1,34 +1,38 @@
 import styles from "./TransactionWidget.module.css";
+import type {TransactionResponseDto} from "../../../types/Transactions.ts";
 
-interface Transaction {
-    id: number;
-    amount: number;
-    description: string;
-    transactionDate: string;
-    type: number;
-    categoryName: string;
-    categoryColor?: string;
-    isRecurring: boolean;
-}
+// interface Transaction {
+//     id: number;
+//     amount: number;
+//     description: string;
+//     transactionDate: string;
+//     type: number;
+//     categoryName: string;
+//     categoryColor?: string;
+//     isRecurring: boolean;
+// }
 
-const TransactionWidget = ({transactions}: { transactions: Transaction[] }) => {
+const TransactionWidget = ({transactions}: { transactions: TransactionResponseDto[] }) => {
     return (
         <div className={styles.container}>
             {transactions.length === 0 ? (
-                <div className={styles.emptyState}>No Data Cycles Detected</div>
+                <div className={styles.emptyState}>No Data Nodes Detected</div>
             ) : (
                 transactions.map((t) => (
                     <div key={t.id} className={styles.row}>
                         <div className={styles.leftSection}>
                             <div
                                 className={styles.accentBar}
-                                style={{backgroundColor: t.categoryColor || 'var(--accent)'}}
+                                style={{
+                                    backgroundColor: t.categoryColor || 'var(--accent)',
+                                    color: t.categoryColor || 'var(--accent)'
+                                }}
                             />
 
                             <div className={styles.info}>
                                 <h4 className={styles.description}>{t.description}</h4>
                                 <div className={styles.meta}>
-                                    <span className={styles.categoryName}>{t.categoryName}</span>
+                                    <span className={styles.categoryName}>{t.categoryName} </span>
                                     {t.isRecurring && <span className={styles.recurringLabel}>Recursive</span>}
                                 </div>
                             </div>
@@ -37,7 +41,7 @@ const TransactionWidget = ({transactions}: { transactions: Transaction[] }) => {
                         <div className={styles.rightSection}>
                             <div className={styles.amountWrapper}>
                                 <span className={`${styles.amount} ${t.type === 0 ? styles.expense : styles.income}`}>
-                                    {t.type === 0 ? '+' : '-'}${Math.abs(t.amount).toLocaleString()}
+                                    {t.type === 0 ? '-' : '+'}${Math.abs(t.amount).toLocaleString()}
                                 </span>
                             </div>
                             <span className={styles.date}>

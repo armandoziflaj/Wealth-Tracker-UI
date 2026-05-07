@@ -1,53 +1,67 @@
-import { useApiQuery } from './useApiQuery';
+import {useApiQuery} from './useApiQuery';
 import {createCategory, deleteCategory, fetchCategories, fetchCategory, updateCategory} from '../api/apiCategories';
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import type {CategoryCreateDto, CategoryUpdateDto} from "../types/Category.ts";
+import {handleApiError} from "./handleApiErrors.ts";
 
 export const useCategories = () => {
-  return useApiQuery(
-      ['categories'],
-      async ({ signal }) => {
-        const result = await fetchCategories(signal);
+    return useApiQuery(
+        ['categories'],
+        async ({signal}) => {
+            try {
+                const result = await fetchCategories(signal);
 
-        if (!result.isSuccess) {
-          throw new Error(result.errors?.join(". ") || "Failed to load categories");
+                if (!result.isSuccess) {
+                    throw new Error(result.errors?.join(". ") || "Failed to load categories");
+                }
+
+                return result.data;
+            } catch (err) {
+                return handleApiError(err);
+            }
         }
-
-        return result.data;
-      }
-  );
+    );
 };
 
 export const useCategory = (id: number | undefined) => {
-  return useApiQuery(
-      ['category', id],
-      async ({ signal }) => {
-        const result = await fetchCategory(id!, signal);
+    return useApiQuery(
+        ['category', id],
+        async ({signal}) => {
+            try {
+                const result = await fetchCategory(id!, signal);
 
-        if (!result.isSuccess) {
-          throw new Error(result.errors?.join(". ") || "Category not found");
+                if (!result.isSuccess) {
+                    throw new Error(result.errors?.join(". ") || "Category not found");
+                }
+                return result.data;
+            } catch (err) {
+                return handleApiError(err);
+            }
+        },
+        {
+            enabled: !!id,
         }
-
-        return result.data;
-      },
-      {
-        enabled: !!id,
-      }
-  );
+    );
 };
 export const useCreateCategory = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async (newCategory: CategoryCreateDto) => {
-            const result = await createCategory(newCategory);
-            if (!result.isSuccess) {
-                throw new Error(result.errors?.join(". ") || "Failed to create category");
+            try {
+                const result = await createCategory(newCategory);
+
+                if (!result.isSuccess) {
+                    throw new Error(result.errors?.join(". ") || "Failed to create category");
+                }
+
+                return result.data;
+            } catch (err) {
+                return handleApiError(err);
             }
-            return result.data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['categories'] });
+            queryClient.invalidateQueries({queryKey: ['categories']});
         },
     });
 };
@@ -57,14 +71,19 @@ export const useUpdateCategory = () => {
 
     return useMutation({
         mutationFn: async (newCategory: CategoryUpdateDto) => {
-            const result = await updateCategory(newCategory);
-            if (!result.isSuccess) {
-                throw new Error(result.errors?.join(". ") || "Failed to create category");
+            try {
+                const result = await updateCategory(newCategory);
+                if (!result.isSuccess) {
+                    throw new Error(result.errors?.join(". ") || "Failed to update category");
+                }
+                return result.data;
+            } catch (err) {
+                return handleApiError(err);
             }
-            return result.data;
+
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['categories'] });
+            queryClient.invalidateQueries({queryKey: ['categories']});
         },
     });
 };
@@ -74,14 +93,18 @@ export const useDeleteCategory = () => {
 
     return useMutation({
         mutationFn: async (categoryId: number) => {
-            const result = await deleteCategory(categoryId);
-            if (!result.isSuccess) {
-                throw new Error(result.errors?.join(". ") || "Failed to create category");
+            try {
+                const result = await deleteCategory(categoryId);
+                if (!result.isSuccess) {
+                    throw new Error(result.errors?.join(". ") || "Failed to delete category");
+                }
+                return result.data;
+            } catch (err) {
+                return handleApiError(err);
             }
-            return result.data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['categories'] });
+            queryClient.invalidateQueries({queryKey: ['categories']});
         },
     });
 };

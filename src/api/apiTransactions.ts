@@ -5,7 +5,7 @@ import type {
     TransactionResponseDto,
     TransactionUpdateDto
 } from "../types/Transactions.ts";
-import type {BaseResponse, CategoryData, DashboardData, MonthlyData, PaginatedResponse} from "../types";
+import type {BaseResponse, DashboardData, MonthlyData, PaginatedResponse} from "../types";
 
 export const fetchFilteredTransactions = async (
     filters: TransactionFilterDto,

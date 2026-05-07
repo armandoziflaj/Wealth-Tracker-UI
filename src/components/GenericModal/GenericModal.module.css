@@ -1,15 +1,16 @@
-/* ZenModal.module.css */
 .backdrop {
     display: flex;
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(8px);
+    background-color: rgba(var(--zen-black-rgb), 0.7);
+    padding: 1rem;
 }
 
 .modalContent {
-    width: 90vw;
-    max-width: 1000px; /* Larger for charts */
-    height: 80vh;
+    width: 100%;
+    height: auto;
+    max-height: 90vh;
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
     border-radius: 2rem;
@@ -18,6 +19,23 @@
     outline: none;
     display: flex;
     flex-direction: column;
+    transition: all var(--transition-speed) ease;
+}
+
+.sm {
+    max-width: 400px;
+}
+
+.md {
+    max-width: 600px;
+}
+
+.lg {
+    max-width: 900px;
+}
+
+.xl {
+    max-width: 1200px;
 }
 
 .header {
@@ -27,12 +45,19 @@
     margin-bottom: 2rem;
 }
 
+.titleGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .title {
     font-size: 1.5rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -0.02em;
     color: var(--text-main);
+    line-height: 1;
 }
 
 .subtitle {
@@ -43,8 +68,63 @@
     letter-spacing: 0.2em;
 }
 
+.closeButton {
+    color: var(--accent) !important;
+    background-color: rgba(var(--zen-neon-rgb), 0.05) !important;
+    transition: all var(--transition-speed) ease !important;
+}
+
+.closeButton:hover {
+    background-color: rgba(var(--zen-neon-rgb), 0.15) !important;
+    transform: rotate(90deg) scale(1.1);
+}
+
 .body {
-    flex: 1;
     width: 100%;
-    overflow: hidden;
+    height: auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+
+.body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.body::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
+@media (max-width: 1024px) {
+    .modalContent {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .modalContent {
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+        width: 95vw;
+    }
+
+    .title {
+        font-size: 1.25rem;
+    }
+
+    .header {
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-height: 500px) {
+    .modalContent {
+        max-height: 95vh;
+        padding: 1rem;
+    }
+
+    .header {
+        margin-bottom: 1rem;
+    }
 }

@@ -11,14 +11,13 @@
     --zen-neon-rgb: 198, 255, 94;
     --zen-white-rgb: 255, 255, 255;
     --zen-black-rgb: 0, 0, 0;
+    --zen-error-rgb: 255, 77, 77;
 
     --bg-app: var(--zen-deep);
     --bg-surface: var(--zen-card);
     --bg-input: var(--zen-input);
-
     --text-main: var(--zen-white);
     --text-dim: var(--zen-muted);
-
     --accent: var(--zen-neon);
     --color-error: var(--zen-error);
     --border-color: rgba(var(--zen-white-rgb), 0.05);
@@ -32,16 +31,17 @@
     --zen-light-input: #E5E7EB;
     --zen-light-text: #111827;
     --zen-light-dim: #6B7280;
-    --zen-light-accent: #4FAD00;
+    --zen-light-accent: #2D7D46;
     --zen-light-error: #D32F2F;
+
+    --zen-neon-rgb: 45, 125, 70;
+    --zen-error-rgb: 211, 47, 47;
 
     --bg-app: var(--zen-light-bg);
     --bg-surface: var(--zen-light-surface);
     --bg-input: var(--zen-light-input);
-
     --text-main: var(--zen-light-text);
     --text-dim: var(--zen-light-dim);
-
     --accent: var(--zen-light-accent);
     --color-error: var(--zen-light-error);
     --border-color: rgba(var(--zen-black-rgb), 0.1);
@@ -53,22 +53,60 @@
     box-sizing: border-box;
 }
 
-:root {
-    background-color: #0D0D0D;
-}
-
-#root {
+html,
+body {
     height: 100%;
+    width: 100%;
+    background-color: var(--bg-app);
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: var(--bg-app);
     color: var(--text-main);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     transition: background-color var(--transition-speed), color var(--transition-speed);
+    overflow-x: hidden;
 }
 
 #root {
+    min-height: 100%;
     display: flex;
     flex-direction: column;
+}
+
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+    border: 2px solid var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--bg-app);
+}
+
+
+button, input, select, textarea {
+    font-family: inherit;
+}
+
+img {
+    max-width: 100%;
+    display: block;
 }

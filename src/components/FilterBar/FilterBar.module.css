@@ -27,7 +27,6 @@
 
 .label {
     color: var(--text-dim);
-    text-transform: uppercase;
     letter-spacing: 0.15em;
     font-size: 0.65rem;
     font-weight: 900;
@@ -45,41 +44,57 @@
     width: 100%;
     transition: all var(--transition-speed);
     outline: none;
+    min-height: 48px;
 }
 
 .input:focus {
     border-color: var(--accent);
-    background-color: var(--zen-black);
+    background-color: var(--bg-input);
     box-shadow: 0 0 15px rgba(var(--zen-neon-rgb), 0.1);
 }
 
 .searchInput::placeholder {
     color: var(--text-dim);
     opacity: 0.4;
-    text-transform: uppercase;
+    text-transform: lowercase;
     font-size: 0.7rem;
     letter-spacing: 0.1em;
 }
 
 .dateInput {
-    color: transparent;
-}
-
-.dateInput:focus,
-.dateInput:not([value=""]) {
+    color-scheme: dark;
     color: var(--text-main);
 }
 
+.dateInput:focus {
+    background-color: var(--bg-input);
+}
+
+.dateInput::-webkit-datetime-edit-text,
+.dateInput::-webkit-datetime-edit-month-field,
+.dateInput::-webkit-datetime-edit-day-field,
+.dateInput::-webkit-datetime-edit-year-field {
+    color: var(--text-main);
+}
+
+.dateInput::-webkit-datetime-edit-month-field:focus,
+.dateInput::-webkit-datetime-edit-day-field:focus,
+.dateInput::-webkit-datetime-edit-year-field:focus {
+    background-color: var(--accent);
+    color: var(--zen-black);
+    border-radius: 2px;
+}
+
 .dateInput::-webkit-calendar-picker-indicator {
-    /* Neon Green Filter */
-    filter: invert(85%) sepia(20%) saturate(1000%) hue-rotate(35deg);
+    filter: invert(1) brightness(0.5) sepia(1) saturate(5) hue-rotate(90deg);
     cursor: pointer;
-    opacity: 0.6;
-    transition: opacity var(--transition-speed);
+    opacity: 0.8;
+    transition: all var(--transition-speed);
 }
 
 .dateInput::-webkit-calendar-picker-indicator:hover {
     opacity: 1;
+    transform: scale(1.1);
 }
 
 .tabsContainer {
@@ -101,7 +116,6 @@
     color: var(--text-dim);
     font-size: 0.7rem;
     font-weight: 800;
-    text-transform: uppercase;
     letter-spacing: 0.1em;
     cursor: pointer;
     border-radius: 0.5rem;
